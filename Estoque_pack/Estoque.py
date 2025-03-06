@@ -15,7 +15,15 @@ import subprocess
 
 def abrir_main():
     root.quit()  # Fecha a janela atual
-    subprocess.Popen(["python", "main.py"])
+    # subprocess.Popen(["python", "main.py"])
+
+def abrir_entrada():
+    # root.quit()  # Fecha a janela atual
+    subprocess.Popen(["python", "Entrada_pack\Entradai.py"])
+
+def abrir_saida():
+    # root.quit()  # Fecha a janela atual
+    subprocess.Popen(["python", "Saida_pack\Saidai.py"])
 
 base_de_dados = "Base de dados\Estoque.xlsx"
 
@@ -33,10 +41,10 @@ tk.Label(root, text="Estoque", font=("Arial", 12)).grid(row=0, column=0, padx=10
 tk.Button(root, text="Sair", bg="blue", fg="white",
             command=abrir_main).grid(row=0, column=6, padx=5, pady=5, sticky="ew")
 
-tk.Button(root, text="Adicionar Entrada", bg="blue", fg="white").grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+tk.Button(root, text="Adicionar Entrada", bg="blue", fg="white",command=abrir_entrada).grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
 
-tk.Button(root, text="Adicionar Saida", bg="blue", fg="white").grid(row=1, column=1, padx=5, pady=5, sticky="ew")
+tk.Button(root, text="Adicionar Saida", bg="blue", fg="white",command=abrir_saida).grid(row=1, column=1, padx=5, pady=5, sticky="ew")
 
 
 tk.Button(root, text="Abri excel", bg="blue", fg="white").grid(row=1, column=2, padx=5, pady=5, sticky="ew")
@@ -44,6 +52,7 @@ tk.Button(root, text="Abri excel", bg="blue", fg="white").grid(row=1, column=2, 
 tk.Label(root, text="Buscar produto", bg="blue", fg="white").grid(row=5, column=0, padx=5, pady=5, sticky="ew")
 entry_buscar_produto = tk.Entry(root)
 entry_buscar_produto.grid(row=6, column=0, padx=5, pady=5)
+entry_buscar_produto.bind("<KeyRelease>", converter_para_maiusculo)
 
 # Tabela (Treeview) para exibição dos produtos cadastradoS
 

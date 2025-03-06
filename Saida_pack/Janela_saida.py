@@ -108,20 +108,24 @@ entry_buscar.grid(row=1, column=1, padx=1, pady=1)
 valores_produto = carregar_dados_entry(base_de_dados_cadastro, 1)  # Carrega os produtos
 entry_buscar['values'] = valores_produto  # Define os valores no Combobox
 configurar_busca_combobox(entry_buscar, valores_produto)
+entry_buscar.bind("<KeyRelease>", converter_para_maiusculo)
 
 tk.Button(root, text="Adicionar", bg="blue", fg="black",command=lambda:atualizar_campos1(base_de_dados_cadastro,entry_buscar,entry_codigo,entry_produto,entry_setor)).grid(row=1, column=2, padx=1, pady=1, sticky="ew")
 
 tk.Label(root, text="Código", bg="blue", fg="black").grid(row=2, column=0, padx=1, pady=1)
 entry_codigo = ttk.Combobox(root,state="readonly")
 entry_codigo.grid(row=3, column=0, padx=1, pady=1)
+entry_codigo.bind("<KeyRelease>", converter_para_maiusculo)
 
 tk.Label(root, text="Produto", bg="blue", fg="black").grid(row=2, column=1, padx=1, pady=1)
 entry_produto = ttk.Combobox(root,width=47,state="readonly")
 entry_produto.grid(row=3, column=1, padx=1, pady=1)
+entry_produto.bind("<KeyRelease>", converter_para_maiusculo)
 
 tk.Label(root, text="Setor", bg="blue", fg="black",width=12).grid(row=2, column=2, padx=1, pady=1)
 entry_setor = ttk.Combobox(root,state="readonly")
 entry_setor.grid(row=3, column=2, padx=1, pady=1)
+entry_setor.bind("<KeyRelease>", converter_para_maiusculo)
 
 tk.Label(root, text="Data", bg="blue", fg="black").grid(row=2, column=3, padx=1, pady=1)
 entry_data = DateEntry(root, background='darkblue', foreground='white', borderwidth=2, year=2024)
@@ -137,10 +141,12 @@ lista_motivo_saida = ["ADMISSÃO","TROCA DE FUNÇÃO","USO","TROCA","OUTROS"]
 tk.Label(root, text="Motivo", bg="blue", fg="black",width=10).grid(row=4, column=0, padx=1, pady=1)
 entry_tipo_sai = ttk.Combobox(root,values=lista_motivo_saida)
 entry_tipo_sai.grid(row=5, column=0, padx=1, pady=1)
+entry_tipo_sai.bind("<KeyRelease>", converter_para_maiusculo)
 
 tk.Label(root, text="Funcionário", bg="blue", fg="black").grid(row=4, column=1, padx=1, pady=1)
 entry_funcionario = tk.Entry(root,width=50)
 entry_funcionario.grid(row=5, column=1, padx=1, pady=1)
+entry_funcionario.bind("<KeyRelease>", converter_para_maiusculo)
 
 lista_setores_funcionarios = ["APOIO AO CONSUMIDOR","COMERCIAL","CONTINUO","CULINARISTA","DESCONHECIDO",
                                 "FATURAMENTO","FINANCEIRO","FISCAL","GERENTE","LIMPEZA","OPERAÇÃO",
@@ -151,6 +157,7 @@ lista_setores_funcionarios = ["APOIO AO CONSUMIDOR","COMERCIAL","CONTINUO","CULI
 tk.Label(root, text="Setor funcionaria", bg="blue", fg="black").grid(row=4, column=2, padx=1, pady=1)
 entry_setor_fun = ttk.Combobox(root,values=lista_setores_funcionarios)
 entry_setor_fun.grid(row=5, column=2, padx=1, pady=1)
+entry_setor_fun.bind("<KeyRelease>", converter_para_maiusculo)
 
 tk.Label(root, text="Valor total", bg="blue", fg="black").grid(row=4, column=3, padx=1, pady=1)
 entry_valor_total = tk.Entry(root,)
@@ -160,6 +167,7 @@ entry_valor_total.grid(row=5, column=3, padx=1, pady=1)
 tk.Label(root, text="Obs", bg="blue", fg="black").grid(row=4, column=4, padx=1, pady=1)
 entry_obs = tk.Entry(root)
 entry_obs.grid(row=5, column=4, padx=1, pady=1)
+entry_obs.bind("<KeyRelease>", converter_para_maiusculo)
 
 # Botões de ação
 tk.Button(root, text="Salvar", bg="blue", fg="black",command=adicionar_lista).grid(row=3, column=5,columnspan=2, padx=1, pady=1, sticky="ew")

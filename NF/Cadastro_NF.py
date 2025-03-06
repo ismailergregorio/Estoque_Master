@@ -62,6 +62,7 @@ tk.Label(root, text="Buscar produto", bg="blue", fg="white").grid(row=5, column=
 entry_buscar_produto = tk.Entry(root)
 entry_buscar_produto.grid(row=6, column=0, padx=5, pady=5)
 entry_buscar_produto.bind("<KeyRelease>" )
+entry_buscar_produto.bind("<KeyRelease>", converter_para_maiusculo)
 
 # Filtros de data
 tk.Label(root, text="Data inicial", bg="blue", fg="white").grid(row=7, column=0, padx=5, pady=5)

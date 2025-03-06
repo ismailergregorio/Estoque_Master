@@ -50,6 +50,36 @@ def calcular_media(codigo_iten):
     # Retorna o valor médio formatado para duas casas decimais
     return float(f"{valor_media_final:.2f}")
 
+def formatar_cnpj(event):
+    """ Formata o texto do Entry para o padrão CNPJ (00.000.000/0001-00). """
+
+    widget = event.widget
+
+    texto = widget.get()
+    
+    # Remove tudo que não for número
+    numeros = ''.join(filter(str.isdigit, texto))  
+    
+    # Limita a 14 caracteres (tamanho do CNPJ)
+    numeros = numeros[:14]
+
+    # Aplica a formatação do CNPJ
+    formato = ""
+    if len(numeros) > 2:
+        formato = f"{numeros[:2]}."
+    if len(numeros) > 5:
+        formato += f"{numeros[2:5]}."
+    if len(numeros) > 8:
+        formato += f"{numeros[5:8]}/"
+    if len(numeros) > 12:
+        formato += f"{numeros[8:12]}-"
+    if len(numeros) > 13:
+        formato += f"{numeros[12:14]}"
+
+    # Atualiza o campo com a formatação
+    widget.delete(0, tk.END)
+    widget.insert(0, formato)
+
 
 def deletar_item_entrada(freme_da_tabela,dados):
     """

@@ -37,19 +37,22 @@ def verificar_campos_vazios(
 
     # Verifique os campos vazios
     campos_vazios = [campo for campo, valor in campos.items() if not str(valor).strip()]
+
     if len(cnpj.get()) < 14:
         mensagem = "CNPJ não esta correto"
-        print(mensagem)  # Ou exiba uma mensagem usando messagebox
+        messagebox.showwarning("Campo Vazio", f"Verifique os capos de preenchimento {mensagem}.")
         return False
 
     if len(numero.get()) < 14:
         mensagem = "Numero não esta correto"
         print(mensagem)  # Ou exiba uma mensagem usando messagebox
+        messagebox.showwarning("Campo Vazio", f"Verifique os capos de preenchimento {mensagem}.")
         return False
     
     if campos_vazios:
         mensagem = "Os seguintes campos estão vazios:\n" + "\n".join(campos_vazios)
         print(mensagem)  # Ou exiba uma mensagem usando messagebox
+        messagebox.showwarning("Campo Vazio", f"Verifique os capos de preenchimento {mensagem}.")
         return False
     
     return True
@@ -161,6 +164,8 @@ def pre_lista():
         tree.insert("", "end", values=iten)
         iten = []
         print(pre_lista_entrada)
+    else:
+        messagebox.showwarning("Campo Vazio", f"Verifique os capos de preenchimento.")
 
 def deletar_pre_lista():
     global pre_lista_entrada
@@ -220,21 +225,25 @@ tk.Label(root, text="CNPJ", bg="blue", fg="black").grid(row=1, column=0, padx=1,
 entry_cnpj_fornecedor = tk.Entry(root)
 entry_cnpj_fornecedor.grid(row=2, column=0, padx=1, pady=1)
 entry_cnpj_fornecedor.bind('<KeyRelease>', ao_digitar)
+# entry_cnpj_fornecedor.bind("<KeyRelease>", converter_para_maiusculo)
 
 tk.Label(root, text="Nome Fornecedor", bg="blue", fg="black").grid(row=1, column=1, padx=1, pady=1)
 entry_nome_fornecedor = tk.Entry(root)
 entry_nome_fornecedor.grid(row=2, column=1, padx=1, pady=1)
 entry_nome_fornecedor.bind('<KeyRelease>', converter_para_maiusculo_1)
+# entry_nome_fornecedor.bind("<KeyRelease>", converter_para_maiusculo)
 # Data de entrada do produto
 tk.Label(root, text="Seguimento", bg="blue", fg="black").grid(row=1, column=2, padx=1, pady=1)
 entry_seguimeto = ttk.Combobox(root,values=lista_seguimento)
 entry_seguimeto.grid(row=2, column=2, padx=1, pady=1)
+entry_seguimeto.bind("<KeyRelease>", converter_para_maiusculo)
 
 # Quantidade de produtos
 tk.Label(root, text="Numero", bg="blue", fg="black").grid(row=1, column=3, padx=1, pady=1)
 entry_contato = tk.Entry(root)
 entry_contato.grid(row=2, column=3, padx=1, pady=1)
 entry_contato.bind('<KeyRelease>', ao_digitar_telefone)
+# entry_contato.bind("<KeyRelease>", converter_para_maiusculo)
 
 # Motivo da entrada (e.g., compra, devolução)
 tk.Label(root, text="E-mail", bg="blue", fg="black").grid(row=1, column=4, padx=1, pady=1)
@@ -246,6 +255,7 @@ tk.Label(root, text="Obs", bg="blue", fg="black").grid(row=1, column=5, padx=1, 
 entry_obs = tk.Entry(root)
 entry_obs.grid(row=2, column=5, padx=1, pady=1)
 entry_obs.bind('<KeyRelease>', converter_para_maiusculo_2)
+entry_obs.bind("<KeyRelease>", converter_para_maiusculo)
 
 
 # Botões de ação (Salvar, Deletar, Cancelar, Finalizar)

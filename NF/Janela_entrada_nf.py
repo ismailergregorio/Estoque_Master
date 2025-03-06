@@ -292,6 +292,7 @@ tk.Label(root, text="Entrada NF", font=("Arial", 14), bg="blue", fg="black").gri
 tk.Label(root, text="Fornecedor", bg="blue", fg="black",).grid(row=1, column=0, padx=1, pady=1)   
 entry_busca_fornecedor = ttk.Combobox(root,width=50, values=lista_fornecedor)
 entry_busca_fornecedor.grid(row=1, column=1, padx=1, pady=1)
+entry_busca_fornecedor.bind("<KeyRelease>", converter_para_maiusculo)
 
 tk.Button(root, text="Adicionar", bg="blue", fg="black",command=adicionar_fornecedor).grid(row=1, column=2, padx=1, pady=1, sticky="ew")
 
@@ -299,16 +300,19 @@ tk.Button(root, text="Adicionar", bg="blue", fg="black",command=adicionar_fornec
 tk.Label(root, text="Nome Fornecedor", bg="blue", fg="black",width=20).grid(row=2, column=1, padx=1, pady=1)
 entry_nome_fornecedor = ttk.Combobox(root,width=50,state="readonly")
 entry_nome_fornecedor.grid(row=3, column=1, padx=1, pady=1)
+entry_nome_fornecedor.bind("<KeyRelease>", converter_para_maiusculo)
 
 tk.Label(root, text="CNPJ", bg="blue", fg="black",width=20).grid(row=2, column=0, padx=1, pady=1)
 entry_cnpj = ttk.Combobox(root,width=20,state="readonly")
 entry_cnpj.grid(row=3, column=0, padx=1, pady=1)
+entry_cnpj.bind("<KeyRelease>", converter_para_maiusculo)
 
 
 # Data de entrada do produto
 tk.Label(root, text="Seguimento", bg="blue", fg="black",width=20).grid(row=2, column=2, padx=1, pady=1)
 entry_seguimento = ttk.Combobox(root,width=20,state="readonly")
 entry_seguimento.grid(row=3, column=2, padx=1, pady=1)
+entry_seguimento.bind("<KeyRelease>", converter_para_maiusculo)
 
 # Quantidade de produtos
 tk.Label(root, text="Data", bg="blue", fg="black").grid(row=2, column=3, padx=1, pady=1)
@@ -322,16 +326,19 @@ tk.Label(root, text="N°-NF", bg="blue", fg="black").grid(row=2, column=4, padx=
 numero_nf = tk.Entry(root,validate="key", validatecommand=(vcmd, "%P"))
 numero_nf.grid(row=3, column=4, padx=1, pady=1)
 numero_nf.bind("<KeyRelease>",verifica_nota)
+numero_nf.bind("<KeyRelease>", converter_para_maiusculo)
 
 tk.Label(root, text="Motivo", bg="blue", fg="black").grid(row=2, column=5, padx=1, pady=1)
 lista_motivo_entrada = ["COMPRA", "DEVOLUÇÃO", "TROCA", "OUTROS"]
 entry_tipo_entrada = ttk.Combobox(root, values=lista_motivo_entrada)
 entry_tipo_entrada.grid(row=3, column=5, padx=1, pady=1)
+entry_tipo_entrada.bind("<KeyRelease>", converter_para_maiusculo)
 
 # Valor unitário do produto
 tk.Label(root, text="Obs", bg="blue", fg="black").grid(row=2, column=6, padx=1, pady=1)
 obs = tk.Entry(root)
 obs.grid(row=3, column=6, padx=1, pady=1)
+obs.bind("<KeyRelease>", converter_para_maiusculo)
 
 texto_var.set("R$ 0.000,00")
 
@@ -345,6 +352,7 @@ valores_produto = carregar_dados_entry(base_de_dados_entrada_itens, 1)  # Carreg
 entry_produto['values'] = valores_produto  # Define os valores no Combobox
 configurar_busca_combobox(entry_produto, valores_produto)
 entry_produto.bind("<<ComboboxSelected>>",busca_codigo)
+entry_produto.bind("<KeyRelease>", converter_para_maiusculo)
 
 tk.Label(root, text="Codigo", bg="blue", fg="black").grid(row=4, column=0, padx=1, pady=1)
 entry_codigo = ttk.Combobox(root)
@@ -353,11 +361,13 @@ valor_codigo = carregar_dados_entry(base_de_dados_entrada_itens, 0)  # Carrega o
 entry_codigo['values'] = valor_codigo  # Define os valores no Combobox
 configurar_busca_combobox(entry_codigo, valores_produto)
 entry_codigo.bind("<<ComboboxSelected>>",busca_produto)
+entry_codigo.bind("<KeyRelease>", converter_para_maiusculo)
 
 
 tk.Label(root, text="Setor", bg="blue", fg="black").grid(row=4, column=2, padx=1, pady=1)
 entry_setor = ttk.Combobox(root)
 entry_setor.grid(row=5, column=2, padx=1, pady=1)
+entry_setor.bind("<KeyRelease>", converter_para_maiusculo)
 
 # Quantidade de produtos
 tk.Label(root, text="Quantidade", bg="blue", fg="black").grid(row=4, column=3, padx=1, pady=1)

@@ -216,13 +216,16 @@ def montar_lista_itens_admissao(lista):
 
 def salvar_pre_lista():
     global lista_pre_salva 
-    lista_itens = verifica_itens()
+    verfica_campos = verificar_campos_vazios([entry_nome_funcionario,entry_funcao_funcionario,entry_data_admicao])
+    if verfica_campos:
+        lista_itens = verifica_itens()
 
-    lista_pre_salva = montar_lista_itens_admissao(lista_itens)
-    adicionar_itens_na_lista_admissao(tree,entry_nome_funcionario,entry_funcao_funcionario)
-    deleta_entrada()
-    for i in lista_pre_salva:
-        print(i)
+        lista_pre_salva = montar_lista_itens_admissao(lista_itens)
+        adicionar_itens_na_lista_admissao(tree,entry_nome_funcionario,entry_funcao_funcionario)
+        deleta_entrada()
+        for i in lista_pre_salva:
+            print(i)
+
 
 def deletar_pre_lista():
     global lista_pre_salva
@@ -232,16 +235,19 @@ def deletar_pre_lista():
     item_values = list(tree.item(item_selecionado, 'values')) 
     # print(item_values[1]) 
 
-    lista_atualizada = []
-    for i in lista_pre_salva:
-        if item_values[1] != i[7]:
-            lista_atualizada.append(i)
-    
-    lista_pre_salva = []
-    lista_pre_salva = lista_atualizada
-    tree.delete(selecionado)
-    for i in lista_pre_salva:
-        print(i)
+    resultado = mostrar_alerta(f"Deseja Excluir este iten {item_values}? ")
+
+    if resultado:
+        lista_atualizada = []
+        for i in lista_pre_salva:
+            if item_values[1] != i[7]:
+                lista_atualizada.append(i)
+        
+        lista_pre_salva = []
+        lista_pre_salva = lista_atualizada
+        tree.delete(selecionado)
+        for i in lista_pre_salva:
+            print(i)
 
 def finalizar():
     finalizar_itens_saida(lista_pre_salva,base_de_dados_saida)
@@ -253,6 +259,7 @@ janela.title("Selecionar Itens")
 tk.Label(janela, text="Nome", bg="blue", fg="black").grid(row=0, column=0, sticky="w", padx=1, pady=1, columnspan=3)
 entry_nome_funcionario = tk.Entry(janela, width=59)
 entry_nome_funcionario.grid(row=1, column=0, sticky="w", columnspan=3, padx=1, pady=1)
+entry_nome_funcionario.bind("<KeyRelease>", converter_para_maiusculo)
 
 tk.Label(janela, text="Data", bg="blue", fg="black").grid(row=2, column=1, padx=1, pady=1,sticky="w")
 entry_data_admicao = DateEntry(janela, width=12, background='darkblue', foreground='white', borderwidth=2)
@@ -262,19 +269,24 @@ tk.Label(janela, text="Função", bg="blue", fg="black").grid(row=2, column=0, p
 entry_funcao_funcionario = ttk.Combobox(janela, values=lista_de_funcoes)
 entry_funcao_funcionario.grid(row=3, column=0, padx=1, pady=1, sticky="w")
 entry_funcao_funcionario.bind("<<ComboboxSelected>>", verifica_funcao)
+entry_funcao_funcionario.bind("<KeyRelease>", converter_para_maiusculo)
 
 # Widgets criados uma vez para serem usados depois
 label_blusa = tk.Label(janela, text="Blusa", bg="blue", fg="black")
 entry_blusa = ttk.Combobox(janela, width=59)
+entry_blusa.bind("<KeyRelease>", converter_para_maiusculo)
 
 label_calca = tk.Label(janela, text="Calça", bg="blue", fg="black")
 entry_calca = ttk.Combobox(janela, width=59)
+entry_calca.bind("<KeyRelease>", converter_para_maiusculo)
 
 label_jaleco = tk.Label(janela, text="Jaleco", bg="blue", fg="black")
 entry_jaleco = ttk.Combobox(janela, width=59)
+entry_jaleco.bind("<KeyRelease>", converter_para_maiusculo)
 
 label_epi = tk.Label(janela, text="EPI", bg="blue", fg="black")
 entry_epi = ttk.Combobox(janela, width=59)
+entry_epi.bind("<KeyRelease>", converter_para_maiusculo)
 
 
 # Criação dos checkboxes e posicionamento com grid para kit basico

@@ -31,12 +31,12 @@ data_menos_360_dias = data_atual - timedelta(days=360)
 def atualizar_filtros(event):
     filtro(tabela_frame,base_de_dados,entry_data_inicial.get_date(),entry_data_final.get_date(),entry_buscar_produto.get(),3,1)
 
-def converter_para_maiusculo(event):
-    # Obtém o texto atual do Entry
-    texto = entry_nome_produto.get()
-    # Converte o texto para maiúsculas
-    entry_nome_produto.delete(0, tk.END)  # Limpa o conteúdo atual
-    entry_nome_produto.insert(0, texto.upper())  # Insere o texto em maiúsculas
+# def converter_para_maiusculo(event):
+#     # Obtém o texto atual do Entry
+#     texto = entry_nome_produto.get()
+#     # Converte o texto para maiúsculas
+#     entry_nome_produto.delete(0, tk.END)  # Limpa o conteúdo atual
+#     entry_nome_produto.insert(0, texto.upper())  # Insere o texto em maiúsculas
 
 def converter_para_maiusculo_1(event):
     # Obtém o texto atual do Entry
@@ -67,6 +67,14 @@ def salvar():
     if verificar_campos_vazios(entry_nome_produto, entry_setor, entry_data, entry_estoque_m, entry_estoque_d):
         cadastrar_produto(base_de_dados,entry_nome_produto.get(),entry_setor.get(),entry_data.get_date(),entry_estoque_m.get(),entry_estoque_d.get(),entry_obs.get())
         carregar_dados(base_de_dados,tabela_frame)
+
+        entry_nome_produto.delete(0, tk.END)
+        entry_setor.delete(0, tk.END)
+        # entry_data.set_date("")
+        entry_estoque_m.delete(0, tk.END)
+        entry_estoque_d.delete(0, tk.END)
+        entry_obs.delete(0, tk.END)
+
     else:
         print("Por favor, preencha todos os campos.")
         
@@ -129,6 +137,7 @@ Label(root, text="Buscar produto", bg="blue", fg="white").grid(row=5, column=0, 
 entry_buscar_produto = Entry(root)
 entry_buscar_produto.grid(row=6, column=0, padx=5, pady=5)
 entry_buscar_produto.bind("<KeyRelease>", atualizar_e_converter)
+entry_buscar_produto.bind("<KeyRelease>", converter_para_maiusculo)
 # Filtros de data
 Label(root, text="Data inicial", bg="blue", fg="white").grid(row=7, column=0, padx=5, pady=5)
 entry_data_inicial = DateEntry(root, width=12, background='darkblue', foreground='white', borderwidth=2)

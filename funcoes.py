@@ -180,20 +180,28 @@ def validar_numeros_decimais(valor):
         return valor == ""
     
 def deletar_pre_lista(tabela,lista):
-    item_selecionado = tabela.selection()
+   
+   if tabela.selection():
+        item_selecionado = tabela.selection()
+        iten = tabela.item(item_selecionado, "values")
 
-    iten = tabela.item(item_selecionado, "values")
+        permisao = mostrar_alerta(iten)
 
-    for id,item_id in enumerate(tabela.get_children()):  # Itera pelos IDs das linhas
-        # valores = tabela.item(item_id, "values")  # Obtém os valores da linha
-        for n,x in enumerate(lista):
-            if int(x[0]) == int(iten[0]):
-                lista.pop(n)
-                break
+        if permisao:
+            for id,item_id in enumerate(tabela.get_children()):  # Itera pelos IDs das linhas
+                # valores = tabela.item(item_id, "values")  # Obtém os valores da linha
+                for n,x in enumerate(lista):
+                    if int(x[0]) == int(iten[0]):
+                        lista.pop(n)
+                        break
 
-    tabela.delete(item_selecionado)
-    print(lista)
-    return lista
+            tabela.delete(item_selecionado)
+        return lista
+   else:
+       messagebox.showwarning("Erro", f"Iten não selecionado")
+       return lista
+    # except:
+    #     messagebox.showwarning("Erro", f"Iten não selecionado")
 
 def carregar_dados_entry(arquivo, indice):
     """
@@ -258,7 +266,27 @@ def configurar_busca_combobox(combobox, lista_valores):
     # Adiciona o evento de keyrelease ao Combobox
     combobox.bind("<KeyRelease>", atualizar_lista)
 
+def converter_para_maiusculo(event):
+    """Converte o texto do Entry que disparou o evento para maiúsculas."""
+    widget = event.widget  # Obtém o widget que disparou o evento
+    if isinstance(widget, tk.Entry):  # Garante que seja um Entry
+        texto = widget.get()
+        widget.delete(0, tk.END)
+        widget.insert(0, texto.upper())
 
+def verificar_campos_vazios(campos):
+    """Verifica se algum campo está vazio."""
+    for widget in campos:
+        try:
+            if not widget.get().strip():  # Verifica se está vazio ou só tem espaços
+                messagebox.showwarning("Campo Vazio", f"Verifique os capos de preenchimento")
+                return False
+        except:
+            if not widget.data_get().strip():  # Verifica se está vazio ou só tem espaços
+                messagebox.showwarning("Campo Vazio", f"Verifique os capos de preenchimento")
+                return False
+    # messagebox.showinfo("Sucesso", "Todos os campos estão preenchidos!")
+    return True
                 
 
 

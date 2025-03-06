@@ -56,7 +56,7 @@ def verificar_campos_vazios(
 
     if campos_vazios:
         mensagem = "Os seguintes campos estão vazios:\n" + "\n".join(campos_vazios)
-        print(mensagem)  # Ou exiba uma mensagem usando messagebox
+        messagebox.showwarning("Campo Vazio", mensagem)
         return False
     return True
 
@@ -85,6 +85,8 @@ def finalizar():
     if (finalizar_itens_entrada(pre_lista_de_itens,base_de_dados)):
         for item in tree.get_children():
             tree.delete(item)
+        cancela_ferchar()
+        
 
 
 def cancela_ferchar():
@@ -104,6 +106,7 @@ tk.Label(root, text="Entrada", font=("Arial", 14), bg="blue", fg="black").grid(r
 tk.Label(root, text="Buscar Iten", bg="blue", fg="black").grid(row=1, column=0, padx=1, pady=1)
 entry_buscar = ttk.Combobox(root, width=50)
 entry_buscar.grid(row=1, column=1, padx=1, pady=1)
+entry_buscar.bind("<KeyRelease>", converter_para_maiusculo)
 valores_produto = carregar_dados_entry(base_de_dados_cadastro, 1)  # Carrega os produtos
 entry_buscar['values'] = valores_produto  # Define os valores no Combobox
 configurar_busca_combobox(entry_buscar, valores_produto)
@@ -142,6 +145,7 @@ tk.Label(root, text="Motivo", bg="blue", fg="black").grid(row=2, column=5, padx=
 lista_motivo_entrada = ["COMPRA", "DEVOLUÇÃO", "TROCA", "OUTROS"]
 entry_tipo_entrada = ttk.Combobox(root, values=lista_motivo_entrada)
 entry_tipo_entrada.grid(row=3, column=5, padx=1, pady=1)
+entry_tipo_entrada.bind("<KeyRelease>", converter_para_maiusculo)
 
 # Valor unitário do produto
 tk.Label(root, text="Valor Unitario", bg="blue", fg="black").grid(row=2, column=6, padx=1, pady=1)
@@ -159,6 +163,7 @@ entry_valor_total.grid(row=3, column=7, padx=1, pady=1)
 tk.Label(root, text="Obs", bg="blue", fg="black").grid(row=2, column=8, padx=1, pady=1)
 entry_obs = tk.Entry(root)
 entry_obs.grid(row=3, column=8, padx=1, pady=1)
+entry_obs.bind("<KeyRelease>", converter_para_maiusculo)
 
 # Botões de ação (Salvar, Deletar, Cancelar, Finalizar)
 tk.Button(root, text="Salvar", bg="blue", fg="black",command=adicionar_lista).grid(row=4, column=7, padx=1, pady=1, sticky="ew")
