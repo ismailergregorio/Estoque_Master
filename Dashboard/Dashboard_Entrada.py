@@ -63,8 +63,8 @@ def filtros_data(event):
     resultado1 = resultado_grafico_vertical(valor[1],"Motivo",data,base_de_dados_entrada,7) 
     atuliza_grafico_vertical1(frame_grafico_vertical1,resultado1[0],resultado1[1])
 
-    resultado2 = resultado_grafico_vertical(valor[1],"Setor",data) 
-    atuliza_grafico_vertical2(frame_grafico_vertical1,resultado2[0],resultado2[1],base_de_dados_entrada,7)
+    resultado2 = resultado_grafico_vertical(valor[1],"Setor",data,base_de_dados_entrada,7) 
+    atuliza_grafico_vertical2(frame_grafico_vertical1,resultado2[0],resultado2[1])
 
 
 root = Tk()
@@ -173,7 +173,7 @@ print("inicio",resultado1)
 gera_grafico_vertical1(frame_grafico_vertical1,resultado1[0],resultado1[1])
 
 
-resultado2 = resultado_grafico_vertical(lista_mestre,"Setor",data_filtrada,dados_de_entrada,7)
+resultado2 = resultado_grafico_vertical(valor[1],"Setor",data_filtrada,dados_de_entrada,7)
 print("inicio",resultado2)
 gera_grafico_vertical2(frame_grafico_vertical2,resultado2[0],resultado2[1])
 

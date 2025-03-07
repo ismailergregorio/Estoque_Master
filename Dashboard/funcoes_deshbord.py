@@ -65,9 +65,13 @@ def soma_valor_data(dados,numero_coluna_data,nemero_da_coluna_de_soma,datas):
     for data_item in datas:
         valor_soma = 0
         for itens in dados:
+            
             if itens[numero_coluna_data].month == data_item:
                 lista_itesns.append(itens)
-                valor_soma = valor_soma + float(itens[nemero_da_coluna_de_soma])
+                try:
+                    valor_soma = valor_soma + float(itens[nemero_da_coluna_de_soma])
+                except:
+                    valor_soma = valor_soma + float(0)
 
         lista_valor_soma.append(valor_soma)
     
@@ -110,7 +114,10 @@ def soma_valor_personalizado(dados,criterio_da_coluna_personalizada,datas,coluna
             for itens in dados:
                 if itens[coluna_personalizada] == colunas:
                     if itens[3].month == data_personalizada:
-                        valor_soma = valor_soma + float(itens[numero_coluna_soma])
+                        try:
+                            valor_soma = valor_soma + float(itens[numero_coluna_soma])
+                        except:
+                            valor_soma = valor_soma + float(0)
         lista_resultado_soma_ersonalizada.append(valor_soma)
         valor_soma = 0
 

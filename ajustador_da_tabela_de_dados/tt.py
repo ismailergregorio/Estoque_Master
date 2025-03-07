@@ -1,14 +1,20 @@
+import sys
+import os
+
+# Adiciona o diretório do arquivo de funções ao sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from funcoes import abrir_arquivo
 from openpyxl import Workbook
 import datetime
 
 
-cadastro = "Base de dados\CADASTRO.xlsx"
-dados_de_saida = "Base de dados\saida.xlsx"
-dados_de_entrada = "Base de dados\entrada.xlsx"
-dados_de_estoque = "Base de dados\Estoque.xlsx"
-dados_de_cadastro_nf = "Base de dados\Cadastro NF.xlsx"
-dados_de_cadastro_fornecedor = "Base de dados\Cadastro Fornecedor.xlsx"
+cadastro = "ajustador_da_tabela_de_dados/001/CADASTRO.xlsx"
+dados_de_saida = "001\saida.xlsx"
+dados_de_entrada = "001\entrada.xlsx"
+dados_de_estoque = "001\Estoque.xlsx"
+dados_de_cadastro_nf = "001\Cadastro NF.xlsx"
+dados_de_cadastro_fornecedor = "001\Cadastro Fornecedor.xlsx"
 
 def criar_arquivo(nome_arquivo, dados, nome_planilha="Planilha1"):
     workbook = Workbook()
@@ -78,15 +84,19 @@ def codficar(arquivoA,arquivoB):
                 
     return lista_Oficial                
 
+
+tabela_saida = "ajustador_da_tabela_de_dados/001/entrada.xlsx"
+
+
 # criar arquivo com o codigo correto
-dados = codficar(dados_de_saida,cadastro)
-criar_arquivo("codificando.xlsx", dados)
+def ajustar_data_e_codificar(tabela):
+    dados = codficar(tabela,cadastro)
+    criar_arquivo("codificando.xlsx", dados)
 
+    dadosa = mudar_para_data("codificando.xlsx", 3)
+    criar_arquivo("aquivo_data_convertida_e_codificado.xlsx", dadosa)
 
-
-# Processa os dados para mudar data para o formato correto
-# dadosa = mudar_para_data(dados_de_saida, 2)
-# criar_arquivo("data_convertida.xlsx", dadosa)
+ajustar_data_e_codificar(tabela_saida)
 
 # Cria o arquivo Excel
 # criar_arquivo("meus_dados.xlsx", dadosA)
