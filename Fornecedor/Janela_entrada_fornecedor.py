@@ -169,25 +169,29 @@ def pre_lista():
 
 def deletar_pre_lista():
     global pre_lista_entrada
-
-    selecionado = tree.selection()
-    item_selecionado = selecionado[0]
-    item_values = list(tree.item(item_selecionado, 'values')) 
-    # print(item_values[1]) 
-
-    lista_atualizada = []
-    for i in pre_lista_entrada:
-        print(i[1] != item_values[1])
-        if item_values[1] != i[1]:
-
-            lista_atualizada.append(i)
+    # print(selecionado) 
     
-    pre_lista_entrada = []
-    pre_lista_entrada = lista_atualizada
+    selecionado = tree.selection()
+    
+    if selecionado:
+        item_selecionado = selecionado[0]
+        item_values = list(tree.item(item_selecionado, 'values')) 
+        
+        lista_atualizada = []
+        for i in pre_lista_entrada:
+            print(i[1] != item_values[1])
+            if item_values[1] != i[1]:
 
-    tree.delete(selecionado)
-    for i in pre_lista_entrada:
-        print(i)
+                lista_atualizada.append(i)
+        
+        pre_lista_entrada = []
+        pre_lista_entrada = lista_atualizada
+
+        tree.delete(selecionado)
+        return pre_lista_entrada
+    else:
+        messagebox.showwarning("Erro", f"Iten não selecionado")
+        return pre_lista_entrada
 
 def finalizar_cadastro_fornecedor(lista,dados):
     workbook_estoque = load_workbook(dados)

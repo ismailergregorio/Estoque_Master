@@ -26,9 +26,12 @@ base_de_dados_nf = "Base de dados\Cadastro NF.xlsx"
 pre_lista =[]
 cotagem = 1
 # base_de_dados = 'Base de dados\entrada.xlsx'
-def fechar_janela():
-    root.quit()  # Fecha a janela atual
-    subprocess.Popen(["python", "Cadastro NF.py"])  # Abre a Página 2
+def fechar_janela(funcao=None):
+    if funcao == None:
+        root.quit()  # Fecha a janela atual
+        subprocess.Popen(["python", "NF\Cadastro_NF.py"])  # Abre a Página 2
+    else:
+        root.quit()  # Fecha a janela atual
 
 def carregar_fornecedor():
     dados = abrir_arquivo(base_de_dados_cadastro_fornecedor)
@@ -118,7 +121,7 @@ def verifica_campo_vasio():
 
     if campos_vazios:
         mensagem = "Os seguintes campos estão vazios:\n" + "\n".join(campos_vazios)
-        print(mensagem)  # Ou exiba uma mensagem usando messagebox
+        messagebox.showwarning("Erro", f"Iten não preenchidos {mensagem}")
         return False
     return True
 valor_nota = 0
@@ -178,11 +181,12 @@ def pre_salvamento():
 def deletar_iten_lista():
     global pre_lista
 
-    ajusta_valor_total_subtracao()
+    if tree.selection():
+        ajusta_valor_total_subtracao()
 
-    pre_lista = deletar_pre_lista(tree,pre_lista)
+        pre_lista = deletar_pre_lista(tree,pre_lista)
 
-    for_lista_print(pre_lista)
+        for_lista_print(pre_lista)
 
 def busca_codigo(event):
     dados = abrir_arquivo(base_de_dados_entrada_itens)
@@ -209,6 +213,7 @@ lista_fornecedor = carregar_fornecedor()
 def verifica_nota(event):
     numero_digitado = numero_nf.get()
     cnpj_digitado = entry_nome_fornecedor.get()
+    nota_existe = False
 
     if numero_digitado.isdigit():  # Verifica se o valor é numérico
         numero_digitado = int(numero_digitado)
@@ -258,23 +263,28 @@ def finalizar():
     global valor_nota
 
     finalizado = False
-    if (finalizar_itens_entrada(pre_lista,base_de_dados_entrada)):
-        for item in tree.get_children():
-            tree.delete(item)
-        finalizado = True
-    
-    if finalizado:
-        pre_lista = []
-    
-    if adicionar_nota():
-        entry_cnpj.delete(0, tk.END)
-        entry_nome_fornecedor.delete(0, tk.END)
-        entry_seguimento.delete(0, tk.END)
-        entry_date.delete(0, tk.END)
-        numero_nf.delete(0, tk.END)
-        texto_var.set("R$ 0000.00")
-        entry_tipo_entrada.delete(0, tk.END)
-        obs.delete(0, tk.END)
+    if pre_lista and valor_nota:
+        if (finalizar_itens_entrada(pre_lista,base_de_dados_entrada)):
+            for item in tree.get_children():
+                tree.delete(item)
+            finalizado = True
+        
+        if finalizado:
+            pre_lista = []
+        
+        if adicionar_nota():
+            entry_cnpj.delete(0, tk.END)
+            entry_nome_fornecedor.delete(0, tk.END)
+            entry_seguimento.delete(0, tk.END)
+            entry_date.delete(0, tk.END)
+            numero_nf.delete(0, tk.END)
+            texto_var.set("R$ 0000.00")
+            entry_tipo_entrada.delete(0, tk.END)
+            obs.delete(0, tk.END)
+        
+        fechar_janela()
+    else:
+        messagebox.showwarning("Erro", f"Nenhun item foi adicionado nesta nota")
 
 
 
@@ -325,6 +335,7 @@ vcmd = root.register(validar_entrada)  # Registra a função de validação
 tk.Label(root, text="N°-NF", bg="blue", fg="black").grid(row=2, column=4, padx=1, pady=1)
 numero_nf = tk.Entry(root,validate="key", validatecommand=(vcmd, "%P"))
 numero_nf.grid(row=3, column=4, padx=1, pady=1)
+
 numero_nf.bind("<KeyRelease>",verifica_nota)
 numero_nf.bind("<KeyRelease>", converter_para_maiusculo)
 
@@ -423,11 +434,8 @@ tree.column("Obs", width=100)
 tree.grid(row=7, column=0, columnspan=17, rowspan=1, padx=1, pady=1, sticky="nsew")
 
 # Botões de cancelamento e finalização
-tk.Button(root, text="cancelar", bg="blue", fg="black",command=fechar_janela).grid(row=22, column=7, padx=1, pady=1, sticky="ew")
+tk.Button(root, text="cancelar", bg="blue", fg="black",command=lambda:fechar_janela(1)).grid(row=22, column=7, padx=1, pady=1, sticky="ew")
 tk.Button(root, text="finalizar", bg="blue", fg="black",command=finalizar).grid(row=22, column=8, padx=1, pady=1, sticky="ew")
-
-# Inicia o loop principal da interface gráfica
-root.mainloop()
 
 # Executa a criação da interface se o script for rodado diretamente
 if __name__ == "__main__":
