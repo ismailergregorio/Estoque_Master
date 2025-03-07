@@ -78,6 +78,7 @@ def codficar(arquivoA,arquivoB):
                 
     return lista_Oficial                
 
+# criar arquivo com o codigo correto
 dados = codficar(dados_de_saida,cadastro)
 criar_arquivo("codificando.xlsx", dados)
 

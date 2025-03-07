@@ -23,7 +23,8 @@ base_de_dados_casdastro = "Base de dados\CADASTRO.xlsx"
 
 def fechar_pagina():
     root.quit()  # Fecha a janela atual
-    subprocess.Popen(["python", "Saidai.py"])
+    subprocess.Popen(["python", "Saida_pack\Saidai.py"])
+
 
 def calcular_total(event):
     """
@@ -84,15 +85,17 @@ def deletar_iten_lista():
     global pre_lista_de_itens
 
     pre_lista_de_itens = deletar_pre_lista(tree,pre_lista_de_itens)
-
-    for_lista_print(pre_lista_de_itens)
+    pre_lista_de_itens = []
 
 def finalizar():
+    global pre_lista_de_itens
     for i in pre_lista_de_itens:
         print(i)
     if(finalizar_itens_saida(pre_lista_de_itens,base_de_dados)):
         for item in tree.get_children():
             tree.delete(item)
+        pre_lista_de_itens = []
+        fechar_pagina()
 
 root = tk.Tk()
 root.title("Sistema de Saída de Produtos")
@@ -206,7 +209,7 @@ tree.column("Observação", width=100, anchor="center", stretch=True)
 tree.grid(row=7, column=0, columnspan=17, rowspan=1, padx=1, pady=1, sticky="nsew")
 
 # Botões de cancelamento e finalização
-tk.Button(root, text="cancelar", bg="blue", fg="black",command=fechar_pagina).grid(row=20, column=7, padx=1, pady=1, sticky="ew")
+tk.Button(root, text="cancelar", bg="blue", fg="black",command=lambda:fechar_pagina()).grid(row=20, column=7, padx=1, pady=1, sticky="ew")
 tk.Button(root, text="finalizar", bg="blue", fg="black",command=finalizar).grid(row=20, column=8, padx=1, pady=1, sticky="ew")
 
 if __name__ == "__main__":
