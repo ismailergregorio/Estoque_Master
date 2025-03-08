@@ -85,18 +85,28 @@ def codficar(arquivoA,arquivoB):
     return lista_Oficial                
 
 
-tabela_saida = "ajustador_da_tabela_de_dados/001/entrada.xlsx"
+tabela = "ajustador_da_tabela_de_dados/001/Cadastro NF.xlsx"
 
 
 # criar arquivo com o codigo correto
-def ajustar_data_e_codificar(tabela):
+def ajustar_data_e_codificar(tabela,nome):
     dados = codficar(tabela,cadastro)
     criar_arquivo("codificando.xlsx", dados)
 
-    dadosa = mudar_para_data("codificando.xlsx", 3)
-    criar_arquivo("aquivo_data_convertida_e_codificado.xlsx", dadosa)
+    dadosa = mudar_para_data("codificando.xlsx", 2)
+    criar_arquivo(nome, dadosa)
 
-ajustar_data_e_codificar(tabela_saida)
+    if os.path.exists("codificando.xlsx"):  # Verifica se o arquivo existe
+        os.remove("codificando.xlsx")
+        print("Arquivo deletado com sucesso.")
+    else:
+        print("O arquivo não existe.")
 
-# Cria o arquivo Excel
-# criar_arquivo("meus_dados.xlsx", dadosA)
+def ajustar_data(nome_arquivo,indice):
+    dadosa = mudar_para_data("ajustador_da_tabela_de_dados/001/CADASTRO.xlsx", indice)
+    criar_arquivo(nome_arquivo, dadosa)
+
+# ajustar_data_e_codificar(tabela,"Cadastro NF.xlsx")
+
+ajustar_data("CADASTRO.xlsx",2)
+
