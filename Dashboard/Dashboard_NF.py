@@ -19,6 +19,10 @@ DASHBOARD_SAIDA = "Dashboard\Dashboard_Saida.py"
 DASHBOARD_ENTRADA = "Dashboard\Dashboard_Entrada.py"
 DASHBOARD_PERSONALIZADO = "Dashboard\Dashboard_Saida.py"
 
+lista_colunas = seletor_de_coluna(base_de_dados_nf)
+
+lista_itens = []
+
 def abrir_janela(tipo_de_janela):
     if tipo_de_janela == DASHBOARD_NF:
         root.quit() 
@@ -39,20 +43,32 @@ lista_mestre = coverter_dados_em_lista(base_de_dados_nf)
 
 def filtros_data(event):
     global lista_mestre
+    global lista_itens
 
     # print(lista_mestre)
-    lista = filtro(lista_mestre,seletor.get(),entry_data_inicial.get_date(),entry_data_final.get_date())
+    lista = filtro(lista_mestre,seletor.get(),lista_itens[1],entry_data_inicial.get_date(),entry_data_final.get_date())
 
     tree.delete(*tree.get_children())
 
     for x in lista:
         tree.insert("", "end",values=x)
 
-    data = padao_tabela_data(lista)
-    valor = soma_valor_data(lista,data)
+    data = padao_tabela_data(lista,3)
+    valor = soma_valor_data(lista,3,5,data)
     lista_nomeada = nomerar_lista_meses(data)
 
-    atualiza_grafico(lista_nomeada,valor)
+    print(lista_nomeada)
+    print(valor)
+
+    atualiza_grafico(lista_nomeada,valor[0])
+
+
+coluna = lista_colunas
+def atuliza_busca_filtro(event):
+    global lista_itens
+    lista_itens = filtra_por_coluna(lista_mestre,lista_colunas,coluna.get())
+    print(lista_itens)
+    seletor['values'] = lista_itens[1]
 
 
 root = Tk()
@@ -72,22 +88,28 @@ Button(frame_buttos, text="Deshbord Personalizado", bg="blue", fg="white",width=
 frame_buttos_filtro_tabela = Frame(root)
 frame_buttos_filtro_tabela.grid(column=0, row=2 ,columnspan=5)
 
-Label(frame_buttos_filtro_tabela, text="Tabela Compras", font=("Arial", 22)).grid(row=0, column=0,columnspan=5)
+tk.Label(frame_buttos_filtro_tabela, text="Coluna", bg="blue", fg="white").grid(row=1, column=0, padx=5, pady=5)
+coluna = ttk.Combobox(frame_buttos_filtro_tabela,values=coluna)
+coluna.grid(row=1, column=1, padx=1,)
+coluna.set("TODOS")
+coluna.bind("<<ComboboxSelected>>", atuliza_busca_filtro)
+
+Label(frame_buttos_filtro_tabela, text="Tabela Compras", font=("Arial", 22)).grid(row=0, column=2,columnspan=5)
 valores = ["TODOS","COMPRA", "DEVOLUÇÃO", "TROCA", "OUTROS"]
-tk.Label(frame_buttos_filtro_tabela, text="Filtro", bg="blue", fg="white").grid(row=1, column=0, padx=5, pady=5)
+tk.Label(frame_buttos_filtro_tabela, text="Filtro", bg="blue", fg="white").grid(row=1, column=3, padx=5, pady=5)
 seletor = ttk.Combobox(frame_buttos_filtro_tabela,values=valores)
-seletor.grid(row=1, column=1, padx=1,)
+seletor.grid(row=1, column=4, padx=1,)
 seletor.set("TODOS")
 seletor.bind("<<ComboboxSelected>>", filtros_data)
 # Filtros de data
-tk.Label(frame_buttos_filtro_tabela, text="Data inicial", bg="blue", fg="white").grid(row=1, column=2, padx=5, pady=5)
+tk.Label(frame_buttos_filtro_tabela, text="Data inicial", bg="blue", fg="white").grid(row=1, column=5, padx=5, pady=5)
 entry_data_inicial = DateEntry(frame_buttos_filtro_tabela, width=20, background='darkblue', foreground='white', borderwidth=2,)
-entry_data_inicial.grid(row=1, column=3, padx=5, pady=5)
+entry_data_inicial.grid(row=1, column=6, padx=5, pady=5)
 entry_data_inicial.bind("<<DateEntrySelected>>", filtros_data)
 
-tk.Label(frame_buttos_filtro_tabela, text="Data final", bg="blue", fg="white").grid(row=1, column=4, padx=5, pady=5)
+tk.Label(frame_buttos_filtro_tabela, text="Data final", bg="blue", fg="white").grid(row=1, column=7, padx=5, pady=5)
 entry_data_final = DateEntry(frame_buttos_filtro_tabela, width=20, background='darkblue', foreground='white', borderwidth=2,)
-entry_data_final.grid(row=1, column=5, padx=5, pady=5)
+entry_data_final.grid(row=1, column=8, padx=5, pady=5)
 entry_data_final.bind("<<DateEntrySelected>>", filtros_data)
 
 frame_tabela = Frame(root)

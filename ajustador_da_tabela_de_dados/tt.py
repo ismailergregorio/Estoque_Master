@@ -9,12 +9,12 @@ from openpyxl import Workbook
 import datetime
 
 
-cadastro = "ajustador_da_tabela_de_dados/001/CADASTRO.xlsx"
+cadastro = "CADASTRO.xlsx"
 dados_de_saida = "001\saida.xlsx"
 dados_de_entrada = "001\entrada.xlsx"
 dados_de_estoque = "001\Estoque.xlsx"
-dados_de_cadastro_nf = "001\Cadastro NF.xlsx"
-dados_de_cadastro_fornecedor = "001\Cadastro Fornecedor.xlsx"
+dados_de_cadastro_nf = "ajustador_da_tabela_de_dados/001/Cadastro NF.xlsx"
+dados_de_cadastro_fornecedor = "ajustador_da_tabela_de_dados/001/Cadastro Fornecedor.xlsx"
 
 def criar_arquivo(nome_arquivo, dados, nome_planilha="Planilha1"):
     workbook = Workbook()
@@ -74,18 +74,17 @@ def codficar(arquivoA,arquivoB):
     for i in tabelaA.iter_rows(min_row=2, values_only=True):
         for x in tabelaB.iter_rows(min_row=2, values_only=True):
             tupla_iten = list(i)
-            tupla_itenA = list(i)
 
             # print(type(tupla_iten),tupla_iten)
             if tupla_iten[0] == x[1]:
                 # print(x[0],tupla_iten)
                 tupla_iten.insert(0,x[0])
                 lista_Oficial.append(tupla_iten)
+                print(tupla_iten)
                 
     return lista_Oficial                
 
 
-tabela = "ajustador_da_tabela_de_dados/001/Cadastro NF.xlsx"
 
 
 # criar arquivo com o codigo correto
@@ -93,7 +92,7 @@ def ajustar_data_e_codificar(tabela,nome):
     dados = codficar(tabela,cadastro)
     criar_arquivo("codificando.xlsx", dados)
 
-    dadosa = mudar_para_data("codificando.xlsx", 2)
+    dadosa = mudar_para_data("codificando.xlsx", 3)
     criar_arquivo(nome, dadosa)
 
     if os.path.exists("codificando.xlsx"):  # Verifica se o arquivo existe
@@ -106,7 +105,21 @@ def ajustar_data(nome_arquivo,indice):
     dadosa = mudar_para_data("ajustador_da_tabela_de_dados/001/CADASTRO.xlsx", indice)
     criar_arquivo(nome_arquivo, dadosa)
 
-# ajustar_data_e_codificar(tabela,"Cadastro NF.xlsx")
+def ajusta_codificar(tabela,nome):
+    dados = codficar(tabela,cadastro)
+    criar_arquivo("codificando.xlsx", dados)
 
-ajustar_data("CADASTRO.xlsx",2)
+def ajusta_codificar_NF(tabela,nome):
+    dados = codficar(tabela,dados_de_cadastro_fornecedor)
+    criar_arquivo(nome, dados)
+
+
+tabela = "ajustador_da_tabela_de_dados/001/saida.xlsx"
+# ajustar_data_e_codificar(tabela,"saida1.xlsx")
+
+# ajustar_data("CADASTRO.xlsx",2)
+
+# ajusta_codificar("ajustador_da_tabela_de_dados/001/Estoque.xlsx","Estoque.xlsx")
+
+ajusta_codificar_NF(dados_de_cadastro_nf,"Cadastro NF.xlsx")
 

@@ -120,9 +120,8 @@ entry_data_final.bind("<<DateEntrySelected>>", filtros_data)
 frame_tabela = Frame(root)
 frame_tabela.grid(row=3,column=0,columnspan=4)
 
-tree = ttk.Treeview(frame_tabela, columns=("Nº","Codigo","Nome", "Setor", "Data saida", "Quantidade","Motivo", "Funcionario","Setor Funcionario","Valor Total","Observação"), show='headings')
+tree = ttk.Treeview(frame_tabela, columns=("Codigo","Nome", "Setor", "Data saida", "Quantidade","Motivo", "Funcionario","Setor Funcionario","Valor Total","Observação"), show='headings')
 
-tree.heading("Nº", text="Nº")
 tree.heading("Codigo", text="Codigo")
 tree.heading("Nome", text="Nome do Produto",)
 tree.heading("Setor", text="Setor")
@@ -134,7 +133,6 @@ tree.heading("Setor Funcionario", text="Setor Funcionario")
 tree.heading("Valor Total", text="Valor Total")
 tree.heading("Observação", text="Observação")
 
-tree.column("Nº", width=30)
 tree.column("Codigo", width=30)
 tree.column("Nome", width=100, stretch=True)
 tree.column("Setor", width=100, anchor="center", stretch=True)
