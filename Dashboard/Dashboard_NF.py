@@ -46,7 +46,7 @@ def filtros_data(event):
     global lista_itens
 
     # print(lista_mestre)
-    lista = filtro(lista_mestre,seletor.get(),lista_itens[1],entry_data_inicial.get_date(),entry_data_final.get_date())
+    lista = filtro(lista_mestre,seletor.get(),lista_itens[0],entry_data_inicial.get_date(),entry_data_final.get_date())
 
     tree.delete(*tree.get_children())
 
@@ -56,9 +56,6 @@ def filtros_data(event):
     data = padao_tabela_data(lista,3)
     valor = soma_valor_data(lista,3,5,data)
     lista_nomeada = nomerar_lista_meses(data)
-
-    print(lista_nomeada)
-    print(valor)
 
     atualiza_grafico(lista_nomeada,valor[0])
 

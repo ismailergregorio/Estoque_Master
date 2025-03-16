@@ -262,6 +262,7 @@ def configurar_busca_combobox(combobox, lista_valores):
 
          # Reabre o Combobox automaticamente (opcional)
             combobox.event_generate('<Down>')
+        
 
     # Adiciona o evento de keyrelease ao Combobox
     combobox.bind("<KeyRelease>", atualizar_lista)

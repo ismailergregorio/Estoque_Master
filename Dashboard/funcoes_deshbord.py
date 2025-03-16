@@ -70,6 +70,7 @@ def soma_valor_data(dados,numero_coluna_data,nemero_da_coluna_de_soma,datas):
                 lista_itesns.append(itens)
                 try:
                     valor_soma = valor_soma + float(itens[nemero_da_coluna_de_soma])
+                    valor_soma = float(f"{valor_soma:.2f}")
                 except:
                     valor_soma = valor_soma + float(0)
 
@@ -116,6 +117,7 @@ def soma_valor_personalizado(dados,criterio_da_coluna_personalizada,datas,coluna
                     if itens[3].month == data_personalizada:
                         try:
                             valor_soma = valor_soma + float(itens[numero_coluna_soma])
+                            valor_soma = float(f"{valor_soma:.2f}")
                         except:
                             valor_soma = valor_soma + float(0)
         lista_resultado_soma_ersonalizada.append(valor_soma)
@@ -125,20 +127,20 @@ def soma_valor_personalizado(dados,criterio_da_coluna_personalizada,datas,coluna
 
 def filtro(dados,seletor,indice, data_inicial, data_final):
     lista_filtro = []
-    try:
-        if seletor != "TODOS":
-            for x in dados:
-                if seletor == x[indice]:
-                    data = x[3].date()
-                    if data_inicial <= data <= data_final:  # Filtra os dados dentro do intervalo
-                        lista_filtro.append(x)
-        else:
-            for x in dados:
+    # try:
+    if seletor != "TODOS":
+        for x in dados:
+            if seletor == x[indice]:
                 data = x[3].date()
                 if data_inicial <= data <= data_final:  # Filtra os dados dentro do intervalo
                     lista_filtro.append(x)
-    except:
-        print("erro no filtro")
+    else:
+        for x in dados:
+            data = x[3].date()
+            if data_inicial <= data <= data_final:  # Filtra os dados dentro do intervalo
+                lista_filtro.append(x)
+    # except:
+    #     print("erro no filtro")
 
     return lista_filtro  # Retorna a lista filtrada
 

@@ -65,12 +65,12 @@ def verificar_campos_vazios(entry_nome_produto, entry_setor, entry_data, entry_e
 
 def salvar():
     if verificar_campos_vazios(entry_nome_produto, entry_setor, entry_data, entry_estoque_m, entry_estoque_d):
-        cadastrar_produto(base_de_dados,entry_nome_produto.get(),entry_setor.get(),entry_data.get_date(),entry_estoque_m.get(),entry_estoque_d.get(),entry_obs.get())
+        cadastrar_produto(base_de_dados,entry_nome_produto.get().upper(),entry_setor.get(),entry_data.get_date(),entry_estoque_m.get(),entry_estoque_d.get(),entry_obs.get())
         carregar_dados(base_de_dados,tabela_frame)
 
         entry_nome_produto.delete(0, tk.END)
         entry_setor.delete(0, tk.END)
-        # entry_data.set_date("")
+
         entry_estoque_m.delete(0, tk.END)
         entry_estoque_d.delete(0, tk.END)
         entry_obs.delete(0, tk.END)
@@ -98,7 +98,7 @@ Button(root, text="Sair", bg="blue", fg="white",
 Label(root, text="Nome produto", bg="blue", fg="white").grid(row=1, column=0, padx=5, pady=5)
 entry_nome_produto = Entry(root)
 entry_nome_produto.grid(row=2, column=0, padx=5, pady=5)
-entry_nome_produto.bind("<KeyRelease>", converter_para_maiusculo)
+# entry_nome_produto.bind("<KeyRelease>", converter_para_maiusculo)
 
 setores = ["RH", "ESCRITORIO", "SEGURANÇA", "COSINHA LIMPESA", "COSINHA COMIDA", "TRADE", "OPERACIONAL"]
 Label(root, text="Setor", bg="blue", fg="white").grid(row=1, column=1, padx=5, pady=5)

@@ -36,21 +36,26 @@ def fechar_janela(funcao=None):
 def carregar_fornecedor():
     dados = abrir_arquivo(base_de_dados_cadastro_fornecedor)
 
+    lista_alfaetica = []
+    for i in dados.iter_rows(min_row=2,values_only=True):
+        lista_alfaetica.append(i)
+    
+    lista_alfaetica.sort(key=lambda x: x[1])
+
     lista = []
-    for x in dados.iter_rows(min_row=2,values_only=True):
-        i = str(x[0]) + " " + str(x[1])
+    for x in lista_alfaetica:
+        i = str(x[1])
         lista.append(i)
     
     return lista
 
 def adicionar_fornecedor():
     fornecedor_selecionado = entry_busca_fornecedor.get()
-    print(fornecedor_selecionado)
 
     dados = abrir_arquivo(base_de_dados_cadastro_fornecedor)
 
     for x in dados.iter_rows(min_row=2,values_only=True):
-        i = str(x[0]) + " " + str(x[1])
+        i = str(x[1])
         if i == fornecedor_selecionado:
             entry_cnpj.set(x[0])
             entry_nome_fornecedor.set(x[1])
@@ -58,44 +63,11 @@ def adicionar_fornecedor():
 
             entry_busca_fornecedor.delete(0, tk.END)
 
-def validar_entrada(texto):
-    return texto.isdigit() or texto == ""  # Permite apenas números e campo vazio
-
-def validar_float(texto):
-    """Permite apenas números e um único ponto decimal, limitando a duas casas decimais."""
-    if texto == "":
-        return True
-    if texto.count(".") > 1:
-        return False  # Impede mais de um ponto
-    
-    try:
-        partes = texto.split(".")
-        if len(partes) == 2 and len(partes[1]) > 2:
-            return False  # Impede mais de duas casas decimais
-        
-        float(texto)  # Verifica se é um número válido
-        return True
-    except ValueError:
-        return False
-
-def formatar_float(event):
-    """Formata automaticamente o número para ter duas casas decimais se necessário."""
-    texto = entry_valor_unitario.get()
-    
-    if texto:
-        try:
-            numero = float(texto)
-            entry_valor_unitario.insert(0,f"{numero:.2f}")  # Formata para duas casas decimais
-        except ValueError:
-            entry_valor_unitario.insert(0,"")  # Limpa se for inválido
-
 def calcula_preco_total(event):
     try:
         quantidade = int(entry_quantidade.get())
         valor_unitario = float(entry_valor_unitario.get())
         valor_total = quantidade * valor_unitario
-        print(valor_total)
-
         entry_valor_total.delete(tk.END)
         entry_valor_total.set(f"{valor_total:.2f}")  # Correção na formatação
     except ValueError:  # Exceção específica para evitar capturar outros erros inesperados
@@ -125,6 +97,11 @@ def verifica_campo_vasio():
         return False
     return True
 valor_nota = 0
+
+def validacao_entrada_numero(texto):
+    return texto.isdigit() or texto == ""
+
+
 
 def ajusta_valor_total_soma():
     global valor_nota
@@ -157,15 +134,18 @@ def pre_salvamento():
     cotagem = maior_valor + 1
     if not verifica_nota(event=0):
         if verifica_campo_vasio():
-            tree.insert("", "end",values=(cotagem,entry_codigo.get(),entry_produto.get(),entry_setor.get(),entry_date.get_date(),entry_quantidade.get(),entry_tipo_entrada.get(),entry_valor_unitario.get(),entry_valor_total.get(),f"NF° {numero_nf.get()},For:{entry_nome_fornecedor.get()}"))
-            itens = [cotagem,entry_codigo.get(),entry_produto.get(),entry_setor.get(),entry_date.get_date(),entry_quantidade.get(),entry_tipo_entrada.get(),entry_valor_unitario.get(),entry_valor_total.get(),f"NF° {numero_nf.get()},For:{entry_nome_fornecedor.get()}"]
-            pre_lista.append(itens)
-            ajusta_valor_total_soma()
-            print(pre_lista)
-            feito = True
+            if entry_valor_total.get() != "0.00":
+                tree.insert("", "end",values=(cotagem,entry_codigo.get(),entry_produto.get(),entry_setor.get(),entry_date.get_date(),entry_quantidade.get(),entry_tipo_entrada.get(),entry_valor_unitario.get(),entry_valor_total.get(),f"NF° {numero_nf.get()},For:{entry_nome_fornecedor.get()}"))
+                itens = [cotagem,entry_codigo.get(),entry_produto.get(),entry_setor.get(),entry_date.get_date(),entry_quantidade.get(),entry_tipo_entrada.get(),entry_valor_unitario.get(),entry_valor_total.get(),f"NF° {numero_nf.get()},For:{entry_nome_fornecedor.get()}"]
+                pre_lista.append(itens)
+                ajusta_valor_total_soma()
+                feito = True
+            else:
+                print("ERRO AO SALVAR")
+                feito = False
         else:
             print("ERRO AO SALVAR")
-            feito = True
+            feito = False
     else:
         mostrar_alerta("NF ja existe verifique a DANF")
 
@@ -207,8 +187,6 @@ def busca_produto(event):
             entry_setor.delete(0, tk.END)
             entry_produto.insert(0,x[1])
             entry_setor.insert(0,x[2])
-
-lista_fornecedor = carregar_fornecedor()
 
 def verifica_nota(event):
     numero_digitado = numero_nf.get()
@@ -286,9 +264,20 @@ def finalizar():
     else:
         messagebox.showwarning("Erro", f"Nenhun item foi adicionado nesta nota")
 
+lista_fornecedor= []
+
+def atulizar():
+    global lista_fornecedor
+    valores_produto = carregar_dados_entry(base_de_dados_entrada_itens, 1)  # Carrega os produtos
+    entry_produto['values'] = valores_produto  # Define os valores no Combobox
+
+    lista_fornecedor = carregar_fornecedor()
+    entry_busca_fornecedor['values'] = lista_fornecedor
+
+    root.update()
 
 
-
+lista_fornecedor = carregar_fornecedor()
 # Criação da janela principal
 root = tk.Tk()
 root.title("Sistema de Saída de Produtos")
@@ -296,13 +285,16 @@ texto_var = tk.StringVar()
 # Configurações gerais da interface
 root.configure(bg="blue")
 
+vcmd = (root.register(validacao_entrada_numero),"%P")
+
 # Labels e entradas para o cadastro de produtos
 tk.Label(root, text="Entrada NF", font=("Arial", 14), bg="blue", fg="black").grid(row=0, column=0, padx=1, pady=1, sticky="w")
 
 tk.Label(root, text="Fornecedor", bg="blue", fg="black",).grid(row=1, column=0, padx=1, pady=1)   
 entry_busca_fornecedor = ttk.Combobox(root,width=50, values=lista_fornecedor)
 entry_busca_fornecedor.grid(row=1, column=1, padx=1, pady=1)
-entry_busca_fornecedor.bind("<KeyRelease>", converter_para_maiusculo)
+configurar_busca_combobox(entry_busca_fornecedor, lista_fornecedor)
+# entry_busca_fornecedor.bind("<KeyRelease>", converter_para_maiusculo)
 
 tk.Button(root, text="Adicionar", bg="blue", fg="black",command=adicionar_fornecedor).grid(row=1, column=2, padx=1, pady=1, sticky="ew")
 
@@ -330,10 +322,9 @@ entry_date = DateEntry(root, width=12, background='darkblue', foreground='white'
 entry_date.grid(row=3, column=3, padx=1, pady=1)
 
 
-vcmd = root.register(validar_entrada)  # Registra a função de validação
 # Motivo da entrada (e.g., compra, devolução)
 tk.Label(root, text="N°-NF", bg="blue", fg="black").grid(row=2, column=4, padx=1, pady=1)
-numero_nf = tk.Entry(root,validate="key", validatecommand=(vcmd, "%P"))
+numero_nf = tk.Entry(root,validate="key",validatecommand=vcmd)
 numero_nf.grid(row=3, column=4, padx=1, pady=1)
 
 numero_nf.bind("<KeyRelease>",verifica_nota)
@@ -363,7 +354,7 @@ valores_produto = carregar_dados_entry(base_de_dados_entrada_itens, 1)  # Carreg
 entry_produto['values'] = valores_produto  # Define os valores no Combobox
 configurar_busca_combobox(entry_produto, valores_produto)
 entry_produto.bind("<<ComboboxSelected>>",busca_codigo)
-entry_produto.bind("<KeyRelease>", converter_para_maiusculo)
+
 
 tk.Label(root, text="Codigo", bg="blue", fg="black").grid(row=4, column=0, padx=1, pady=1)
 entry_codigo = ttk.Combobox(root)
@@ -382,15 +373,14 @@ entry_setor.bind("<KeyRelease>", converter_para_maiusculo)
 
 # Quantidade de produtos
 tk.Label(root, text="Quantidade", bg="blue", fg="black").grid(row=4, column=3, padx=1, pady=1)
-entry_quantidade = tk.Entry(root,validate="key", validatecommand=(vcmd, "%P"))
+entry_quantidade = tk.Entry(root,validate="key",validatecommand=vcmd)
 entry_quantidade.grid(row=5, column=3, padx=1, pady=1)
 entry_quantidade.bind("<KeyRelease>",calcula_preco_total)
 
-vcmd2 = root.register(validar_float)
 entry_var = tk.StringVar()
 # Valor unitário do produto
 tk.Label(root, text="Valor Unitario", bg="blue", fg="black").grid(row=4, column=4, padx=1, pady=1)
-entry_valor_unitario = tk.Entry(root,textvariable=entry_var, validate="key", validatecommand=(vcmd2, "%P"))
+entry_valor_unitario = tk.Entry(root,textvariable=entry_var, validate="key",)
 entry_valor_unitario.grid(row=5, column=4, padx=1, pady=1)
 entry_valor_unitario.bind("<KeyRelease>",calcula_preco_total)
 # Valor total do produto
@@ -401,6 +391,17 @@ entry_valor_total.grid(row=5, column=5, padx=1, pady=1)
 # Botões de ação (Salvar, Deletar, Cancelar, Finalizar)
 tk.Button(root, text="Salvar", bg="blue", fg="black",command=pre_salvamento).grid(row=4, column=6, padx=1, pady=1, sticky="ew")
 tk.Button(root, text="Deletar", bg="blue", fg="black",command=deletar_iten_lista).grid(row=5, column=6, padx=1, pady=1, sticky="ew")
+
+def aba_criar_item():
+    subprocess.Popen(["python", "Cadastro_pack\Cadastro.py"])
+
+def aba_criar_for():
+    subprocess.Popen(["python", "Fornecedor\Janela_entrada_fornecedor.py"])
+
+tk.Button(root, text="Adicionar Produto Inexistente", bg="blue", fg="black",command=aba_criar_item).grid(row=1, column=7, padx=1, pady=1, sticky="ew")
+tk.Button(root, text="Adicionar Produto Fornecedor", bg="blue", fg="black",command=aba_criar_for).grid(row=2, column=7, padx=1, pady=1, sticky="ew")
+tk.Button(root, text="Atualizar Dados", bg="blue", fg="black",command=atulizar).grid(row=3, column=7, padx=1, pady=1, sticky="ew")
+
 
 # Tabela (Treeview) para exibição dos produtos cadastrados
 colunas = ("Nº","Codigo", "Produto", "Setor", "Data de Entrada", "Quantidade", "Motivo", "Valor Unitario", "Valor Total", "Obs")
@@ -434,8 +435,8 @@ tree.column("Obs", width=100)
 tree.grid(row=7, column=0, columnspan=17, rowspan=1, padx=1, pady=1, sticky="nsew")
 
 # Botões de cancelamento e finalização
-tk.Button(root, text="cancelar", bg="blue", fg="black",command=lambda:fechar_janela(1)).grid(row=22, column=7, padx=1, pady=1, sticky="ew")
-tk.Button(root, text="finalizar", bg="blue", fg="black",command=finalizar).grid(row=22, column=8, padx=1, pady=1, sticky="ew")
+tk.Button(root, text="cancelar", bg="blue", fg="black",command=lambda:fechar_janela(1)).grid(row=22, column=6, padx=1, pady=1, sticky="ew")
+tk.Button(root, text="finalizar", bg="blue", fg="black",command=finalizar).grid(row=22, column=7, padx=1, pady=1, sticky="ew")
 
 # Executa a criação da interface se o script for rodado diretamente
 if __name__ == "__main__":
